@@ -38,6 +38,7 @@ addIntProc:
 
 #define z d21
 #define r d22
+// float addFloatProc(float z, float r);
     .pool
 float1: .double  1.34
 float2: .double  1.561
@@ -101,10 +102,10 @@ asmMain:
     str     d1, [sp, #16]
     bl      printf
 
+
     ldp     z, r, [fp], #16
     ldp     x, y, [fp], #16
 
     mov     sp, fp
     ldp     fp, lr, [sp], #16
     ret
-///
