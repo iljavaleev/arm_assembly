@@ -1,10 +1,4 @@
 #include "aoaa.inc"    
-    .section .rodata, ""
-    .align 4
-float3: .double  0.2
-pf    =         float3
-fptr:   .dword   pf
-
     .text
     .align 2
     .extern printf
@@ -106,9 +100,14 @@ addFloatProcPtr:
 
 asmMain:
   _asmMain:
+    __offset    = 0
+    __offset    = __offset + 8
+    float_ptr   = -__offset
+    size        = __offset + 64
+
     stp     fp, lr, [sp, #-16]!
     mov     fp, sp
-    sub     sp, sp, #((256)+15) & 0xFFFFFFFFFFFFFFF0
+    sub     sp, sp, #(size+15) & 0xFFFFFFFFFFFFFFF0
 
     stp     x, y, [fp, #-16]!
     stp     z, r, [fp, #-16]!
@@ -144,15 +143,15 @@ asmMain:
     //
     lea     x7, float1
     lea     x8, float2
-    lea     x,  fptr
-    
+    add     x,  fp, #float_ptr
+
     str     x7, [sp]
     str     x8, [sp, #8]
     str     x, [sp, #16]
     bl      addFloatProcPtr
 
-    lea     x3, fptr
-    ldr     d3, [x3]
+    ldr     x3, [fp, #float_ptr]
+    fmov     d3, x3
     lea     x0, addFloatStr
     str     z,  [sp]
     str     r,  [sp, #8]
